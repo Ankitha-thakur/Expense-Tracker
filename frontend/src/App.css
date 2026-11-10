@@ -6,8 +6,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f1f5f9;
-  color: #1e293b;
+  background: #fff1f5;
+  color: #4a3040;
 }
 
 .container {
@@ -22,12 +22,12 @@ header {
 }
 
 header h1 {
-  color: #2563eb;
+  color: #c44578;
   font-size: 32px;
 }
 
 header p {
-  color: #64748b;
+  color: #94647b;
 }
 
 .summary {
@@ -38,33 +38,34 @@ header p {
 }
 
 .summary-card {
-  background: white;
+  background: #ffffff;
   padding: 22px;
   border-radius: 12px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 12px rgba(219, 112, 147, 0.12);
 }
 
 .summary-card h3 {
-  color: #64748b;
+  color: #94647b;
   font-size: 16px;
 }
 
 .summary-card h2 {
-  color: #2563eb;
+  color: #c44578;
   font-size: 25px;
 }
 
 .expense-card {
-  background: white;
+  background: #ffffff;
   padding: 28px;
   border-radius: 12px;
   margin-bottom: 25px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 12px rgba(219, 112, 147, 0.12);
 }
 
 .expense-card h2 {
   margin-top: 0;
   margin-bottom: 22px;
+  color: #b83e70;
 }
 
 form {
@@ -75,18 +76,19 @@ form {
 
 label {
   font-weight: bold;
+  color: #70465b;
 }
 
 input,
 select {
   padding: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e8b4ca;
   border-radius: 7px;
   font-size: 15px;
 }
 
 button {
-  background: #2563eb;
+  background: #d96b96;
   color: white;
   border: none;
   padding: 14px;
@@ -97,11 +99,11 @@ button {
 }
 
 button:hover {
-  background: #1d4ed8;
+  background: #bd4f7d;
 }
 
 .empty-message {
-  color: #64748b;
+  color: #94647b;
   text-align: center;
   padding: 20px;
 }
@@ -111,7 +113,6 @@ button:hover {
     grid-template-columns: 1fr;
   }
 }
-
 
 /* Dashboard Charts */
 
@@ -123,7 +124,7 @@ button:hover {
 }
 
 .chart-box {
-  background: #f8fafc;
+  background: #fff7fa;
   padding: 20px;
   border-radius: 12px;
   min-width: 0;
@@ -132,6 +133,7 @@ button:hover {
 .chart-box h3 {
   text-align: center;
   margin-bottom: 20px;
+  color: #b83e70;
 }
 
 .chart-box canvas {
@@ -139,7 +141,7 @@ button:hover {
 }
 
 .expense-item {
-  background: #f8fafc;
+  background: #fff7fa;
   padding: 18px;
   border-radius: 10px;
   margin-top: 15px;
