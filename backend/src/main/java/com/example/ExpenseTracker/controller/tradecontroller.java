@@ -16,7 +16,8 @@ import java.util.Optional;
     "http://localhost:5176",
     "http://localhost:5177",
     "https://expense-tracker-7asux2o5i-ankitha-thakur.vercel.app",
-    "https://expense-tracker-esxdf21d9-ankitha-thakur.vercel.app"
+    "https://expense-tracker-esxdf21d9-ankitha-thakur.vercel.app",
+    "https://expense-tracker-qitwn94n8-ankitha-thakur.vercel.app"
 })
 public class tradecontroller {
 
