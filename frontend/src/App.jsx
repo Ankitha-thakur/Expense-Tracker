@@ -43,17 +43,27 @@ function App() {
     fetchExpenses();
   }, []);
 
-  const fetchExpenses = async () => {
-    try {
-      const response = await API.get('/all');
+  
+const fetchExpenses = async () => {
+  try {
+    const response = await API.get('/all');
+
+    console.log('Backend response:', response.data);
+
+    if (Array.isArray(response.data)) {
       setExpenses(response.data);
-    } catch (error) {
-      console.error('Error fetching expenses:', error);
-      alert('Unable to load expenses. Please check your backend.');
-    } finally {
-      setLoading(false);
+    } else {
+      console.error('Expected an array but received:', response.data);
+      setExpenses([]);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching expenses:', error);
+    alert('Unable to load expenses. Please check your backend.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Add expense to PostgreSQL through Spring Boot
   const addExpense = async (e) => {
