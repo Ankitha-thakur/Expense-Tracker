@@ -1,13 +1,24 @@
+
 package com.example.ExpenseTracker.controller;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.example.ExpenseTracker.entity.trade;
-import com.example.ExpenseTracker.service.tradeservice;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.ExpenseTracker.entity.trade;
+import com.example.ExpenseTracker.service.tradeservice;
 
 @RestController
 @RequestMapping("/trade")
@@ -22,53 +33,78 @@ public class tradecontroller {
     @Autowired
     private tradeservice tradeservice;
 
-    // Save trade
+    // Save expense
     @PostMapping("/save")
-    public trade savetrade(@RequestBody trade t) {
-        return tradeservice.savetrade(t);
+    public trade savetrade(
+            @RequestBody trade t,
+            Authentication authentication) {
+        return tradeservice.savetrade(t, authentication.getName());
     }
-    // Get all trades
+
+    // Get all expenses belonging to logged-in user
     @GetMapping("/all")
-    public List<trade> getalltrades() {
-        return tradeservice.getalltrades();
+    public List<trade> getalltrades(Authentication authentication) {
+        return tradeservice.getalltrades(authentication.getName());
     }
 
-    // Get trade by ID
+    // Get expense by ID
     @GetMapping("/findbyid/{id}")
-    public Optional<trade> gettradebyid(@PathVariable Integer id) {
-        return tradeservice.gettradebyid(id);
+    public Optional<trade> gettradebyid(
+            @PathVariable Integer id,
+            Authentication authentication) {
+        return tradeservice.gettradebyid(id, authentication.getName());
     }
 
-    // Update trade
+    // Update expense
     @PutMapping("/update/{id}")
-    public trade updatetrade(@PathVariable Integer id, @RequestBody trade t) {
-        return tradeservice.updatetrade(id, t);
+    public trade updatetrade(
+            @PathVariable Integer id,
+            @RequestBody trade t,
+            Authentication authentication) {
+        return tradeservice.updatetrade(id, t, authentication.getName());
     }
 
-    // Delete trade
+    // Delete expense
     @DeleteMapping("/delete/{id}")
-    public String deletetrade(@PathVariable Integer id) {
-        tradeservice.deletetrade(id);
+    public String deletetrade(
+            @PathVariable Integer id,
+            Authentication authentication) {
+        tradeservice.deletetrade(id, authentication.getName());
         return "Trade deleted successfully";
     }
-    
+
+    // Filter by date
     @GetMapping("/filterbydate/{date}")
-    public List<trade> filter(@PathVariable String date) {
-        return tradeservice.filter(date);
+    public List<trade> filter(
+            @PathVariable String date,
+            Authentication authentication) {
+        return tradeservice.filter(date, authentication.getName());
     }
-    
+
+    // Filter by category
     @GetMapping("/filterbycategory/{category}")
-    public List<trade> filterbycategory(@PathVariable String category) {
-        return tradeservice.filterbycategory(category);
+    public List<trade> filterbycategory(
+            @PathVariable String category,
+            Authentication authentication) {
+        return tradeservice.filterbycategory(
+            category, authentication.getName()
+        );
     }
-    
+
+    // Filter by date range
     @GetMapping("/filterbydaterange")
-    public List<trade> filterByDateRange(@RequestParam String startDate,@RequestParam String endDate) {
-        return tradeservice.filterByDateRange(startDate, endDate);
+    public List<trade> filterByDateRange(
+            @RequestParam String startDate,
+            @RequestParam String endDate,
+            Authentication authentication) {
+        return tradeservice.filterByDateRange(
+            startDate, endDate, authentication.getName()
+        );
     }
-    
+
+    // Category summary
     @GetMapping("/summary/category")
-    public List<Object[]> getCategorySummary() {
-        return tradeservice.getCategorySummary();
+    public List<Object[]> getCategorySummary(Authentication authentication) {
+        return tradeservice.getCategorySummary(authentication.getName());
     }
 }

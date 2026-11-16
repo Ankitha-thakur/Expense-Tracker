@@ -1,16 +1,20 @@
-# Frontend
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local
-
-# Backend
-backend/target/
-backend/src/main/resources/application.properties
-
-# IDE files
-.vscode/
-.idea/
-
 # Logs
 *.log
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local configuration
+application-local.properties
+
+# Build output
+target/
+node_modules/
+dist/
+
+# IDE files
+.idea/
+.vscode/
+*.iml

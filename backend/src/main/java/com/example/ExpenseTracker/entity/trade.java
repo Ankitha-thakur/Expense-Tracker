@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 
@@ -16,6 +18,9 @@ public class trade {
 	private String category;
 	private String date;
 	
+	@ManyToOne
+@JoinColumn(name = "account_id", nullable = true)
+private AppAccount account;
 	
 	public trade() {
 		super();
@@ -59,6 +64,12 @@ public class trade {
 		this.date = date;
 	}
 	
-	
+	public AppAccount getAccount() {
+    return account;
+}
+
+public void setAccount(AppAccount account) {
+    this.account = account;
+}
 
 }
