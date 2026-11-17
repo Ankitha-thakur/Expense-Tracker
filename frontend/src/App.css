@@ -152,3 +152,112 @@ button:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* Login and Register Pages */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff0f5;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(219, 39, 119, 0.12);
+  text-align: center;
+}
+
+.auth-card h1 {
+  color: #db2777;
+  margin-bottom: 10px;
+}
+
+.auth-card > p {
+  color: #777;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-card label {
+  width: 85%;
+  text-align: left;
+  color: #9d174d;
+  font-weight: 600;
+}
+
+.auth-card input {
+  width: 50%;
+  padding: 12px;
+  border: 1px solid #f3a6c5;
+  border-radius: 9px;
+  outline: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.auth-card input:focus {
+  border-color: #db2777;
+  box-shadow: 0 0 5px rgba(219, 39, 119, 0.2);
+}
+
+.auth-card button {
+  background: #db2777;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 11px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.auth-card button:hover {
+  background: #be185d;
+}
+
+.auth-card form button {
+  width: 85%;
+  margin-top: 12px;
+}
+
+.auth-error {
+  color: #dc2626;
+  font-size: 14px;
+}
+.auth-card form input {
+  width: 280px !important;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto 12px;
+  box-sizing: border-box;
+}
+
+.auth-card form label {
+  width: 180px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+  text-align: left;
+}
+.auth-card form input {
+  width: 260px !important;
+  max-width: 100%;
+}
+
+.auth-card form label {
+  width: 260px;
+  max-width: 100%;
+  text-align: left;
+}
+}

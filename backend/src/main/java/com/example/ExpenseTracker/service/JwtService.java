@@ -33,7 +33,7 @@ public class JwtService {
         return Jwts.builder()
             .subject(username)
             .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + 86400000))
+            .expiration(new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000))
             .signWith(secretKey)
             .compact();
     }

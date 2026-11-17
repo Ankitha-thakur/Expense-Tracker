@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import API from './api';
+import Login from './components/Login';
+import Register from './components/Register';
 
 import {
   Chart as ChartJS,
@@ -27,6 +29,13 @@ ChartJS.register(
 );
 
 function App() {
+  // Login and registration states
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem('token'))
+  );
+
+  const [showRegister, setShowRegister] = useState(false);
+
   const [expenses, setExpenses] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedDate, setSelectedDate] = useState('');
@@ -38,34 +47,35 @@ function App() {
 
   const [loading, setLoading] = useState(true);
 
-  // Load expenses from Spring Boot when page opens
+  // Load expenses only after login
   useEffect(() => {
-    fetchExpenses();
-  }, []);
-
-  
-const fetchExpenses = async () => {
-  try {
-    const response = await API.get('/all');
-
-    console.log('Backend response:', response.data);
-
-    if (Array.isArray(response.data)) {
-      setExpenses(response.data);
-    } else {
-      console.error('Expected an array but received:', response.data);
-      setExpenses([]);
+    if (isLoggedIn) {
+      fetchExpenses();
     }
-  } catch (error) {
-    console.error('Error fetching expenses:', error);
-    alert('Unable to load expenses. Please check your backend.');
-  } finally {
-    setLoading(false);
-  }
-};
+  }, [isLoggedIn]);
 
+  // Fetch expenses from Spring Boot
+  const fetchExpenses = async () => {
+    try {
+      const response = await API.get('/all');
 
-  // Add expense to PostgreSQL through Spring Boot
+      console.log('Backend response:', response.data);
+
+      if (Array.isArray(response.data)) {
+        setExpenses(response.data);
+      } else {
+        console.error('Expected an array:', response.data);
+        setExpenses([]);
+      }
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+      alert('Unable to load expenses. Please check your backend.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add expense
   const addExpense = async (e) => {
     e.preventDefault();
 
@@ -75,10 +85,10 @@ const fetchExpenses = async () => {
     }
 
     const newExpense = {
-      title: title,
+      title,
       amount: Number(amount),
-      category: category,
-      date: date
+      category,
+      date
     };
 
     try {
@@ -116,7 +126,7 @@ const fetchExpenses = async () => {
       0
     );
 
-  // Delete expense from PostgreSQL
+  // Delete expense
   const deleteExpense = async (id) => {
     try {
       await API.delete(`/delete/${id}`);
@@ -130,7 +140,7 @@ const fetchExpenses = async () => {
     }
   };
 
-  // Filter by category and date
+  // Filter expenses by category and date
   const filteredExpenses = expenses.filter((expense) => {
     const categoryMatch =
       selectedCategory === 'All' ||
@@ -143,7 +153,7 @@ const fetchExpenses = async () => {
     return categoryMatch && dateMatch;
   });
 
-  // Category-wise totals for charts
+  // Category-wise totals
   const categories = [
     'Food',
     'Travel',
@@ -205,6 +215,21 @@ const fetchExpenses = async () => {
     }
   };
 
+  // Show Login or Register if user is not logged in
+  if (!isLoggedIn) {
+    return showRegister ? (
+      <Register
+        onShowLogin={() => setShowRegister(false)}
+      />
+    ) : (
+      <Login
+        onLogin={() => setIsLoggedIn(true)}
+        onShowRegister={() => setShowRegister(true)}
+      />
+    );
+  }
+
+  // Main Expense Tracker Dashboard
   return (
     <div className="container">
 
