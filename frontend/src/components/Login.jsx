@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import API from '../api';
+import { AUTH_API } from '../api';
 
 function Login({ onLogin, onShowRegister }) {
   const [username, setUsername] = useState('');
@@ -12,7 +12,7 @@ function Login({ onLogin, onShowRegister }) {
     setError('');
 
     try {
-      const response = await API.post('/auth/login', {
+      const response = await AUTH_API.post('/auth/login', {
         username,
         password
       });

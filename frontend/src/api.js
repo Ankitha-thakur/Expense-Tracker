@@ -1,11 +1,16 @@
+
 import axios from 'axios';
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
+export const AUTH_API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL.replace(/\/trade\/?$/, ''),
+});
+
 // Automatically attach JWT token to every request
-API.interceptors.request.use((config) => {
+const addToken = (config) => {
   const token = localStorage.getItem('token');
 
   if (token) {
@@ -13,6 +18,9 @@ API.interceptors.request.use((config) => {
   }
 
   return config;
-});
+};
+
+API.interceptors.request.use(addToken);
+AUTH_API.interceptors.request.use(addToken);
 
 export default API;
