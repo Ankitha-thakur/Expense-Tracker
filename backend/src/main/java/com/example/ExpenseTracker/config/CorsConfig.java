@@ -18,9 +18,10 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Arrays.asList(
-            "https://expense-tracker-beige-phi.vercel.app",
-            "https://expense-tracker-cc3omit7i-ankitha-thakur.vercel.app"
-        ));
+    "https://expense-tracker-beige-phi.vercel.app",
+    "https://expense-tracker-cc3omit7i-ankitha-thakur.vercel.app",
+    "http://localhost:5174"
+));
 
         configuration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS"
