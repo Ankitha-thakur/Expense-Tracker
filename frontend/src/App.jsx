@@ -47,6 +47,13 @@ function App() {
 
   const [loading, setLoading] = useState(true);
 
+  // Logout
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  setExpenses([]);
+  setIsLoggedIn(false);
+  setLoading(true);
+};
   // Load expenses only after login
   useEffect(() => {
     if (isLoggedIn) {
@@ -234,9 +241,13 @@ function App() {
     <div className="container">
 
       <header>
-        <h1>Trade Expense Tracker</h1>
-        <p>Manage and track your daily expenses easily</p>
-      </header>
+  <h1>Trade Expense Tracker</h1>
+  <p>Manage and track your daily expenses easily</p>
+
+  <button type="button" onClick={handleLogout}>
+    Logout
+  </button>
+</header>
 
       {/* Summary */}
       <div className="summary">
