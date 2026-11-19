@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import './App.css';
-import API from './api';
+import API, { AUTH_API } from './api';
 import Login from './components/Login';
 import Register from './components/Register';
 
@@ -46,20 +46,50 @@ function App() {
   const [date, setDate] = useState('');
 
   const [loading, setLoading] = useState(true);
+  const [showRecentExpenses, setShowRecentExpenses] = useState(false);
 
-  // Logout
-const handleLogout = () => {
-  localStorage.removeItem('token');
-  setExpenses([]);
-  setIsLoggedIn(false);
-  setLoading(true);
+  
+const handleLogout = async () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+
+  try {
+    if (refreshToken) {
+      await AUTH_API.post('/auth/logout', {
+        refreshToken
+      });
+    }
+  } catch (error) {
+    console.error('Logout error:', error);
+  } finally {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    setExpenses([]);
+    setIsLoggedIn(false);
+    setLoading(true);
+  }
 };
+
   // Load expenses only after login
   useEffect(() => {
     if (isLoggedIn) {
       fetchExpenses();
     }
   }, [isLoggedIn]);
+
+  // Handle automatic logout when refresh token expires or becomes invalid
+useEffect(() => {
+  const handleAuthLogout = () => {
+    setExpenses([]);
+    setIsLoggedIn(false);
+    setLoading(true);
+  };
+
+  window.addEventListener('auth:logout', handleAuthLogout);
+
+  return () => {
+    window.removeEventListener('auth:logout', handleAuthLogout);
+  };
+}, []);
 
   // Fetch expenses from Spring Boot
   const fetchExpenses = async () => {
@@ -356,70 +386,68 @@ const handleLogout = () => {
       {/* Recent Expenses */}
       <div className="expense-card">
 
-        <h2>Recent Expenses</h2>
+        <button
+  type="button"
+  onClick={() => setShowRecentExpenses(!showRecentExpenses)}
+>
+  {showRecentExpenses ? 'Hide Expenses' : 'View Recent Expenses'}
+</button>
 
-        <label>Filter by Category</label>
+        {showRecentExpenses && (
+  <>
+    <label>Filter by Category</label>
 
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="All">All Categories</option>
-          <option value="Food">Food</option>
-          <option value="Travel">Travel</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Education">Education</option>
-          <option value="Other">Other</option>
-        </select>
+    <select
+      value={selectedCategory}
+      onChange={(e) => setSelectedCategory(e.target.value)}
+    >
+      <option value="All">All Categories</option>
+      <option value="Food">Food</option>
+      <option value="Travel">Travel</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Education">Education</option>
+      <option value="Other">Other</option>
+    </select>
 
-        <label>Filter by Date</label>
+    <label>Filter by Date</label>
 
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-        />
+    <input
+      type="date"
+      value={selectedDate}
+      onChange={(e) => setSelectedDate(e.target.value)}
+    />
 
-        {loading ? (
+    {loading ? (
+      <p>Loading expenses...</p>
+    ) : filteredExpenses.length === 0 ? (
+      <p className="empty-message">
+        No expenses found.
+      </p>
+    ) : (
+      filteredExpenses.map((expense) => (
+        <div className="expense-item" key={expense.id}>
+          <h3>{expense.title}</h3>
 
-          <p>Loading expenses...</p>
+          <p>Category: {expense.category}</p>
+          <p>Date: {expense.date}</p>
 
-        ) : filteredExpenses.length === 0 ? (
+          <strong>
+            ₹{Number(expense.amount).toFixed(2)}
+          </strong>
 
-          <p className="empty-message">
-            No expenses found.
-          </p>
+          <br />
 
-        ) : (
-
-          filteredExpenses.map((expense) => (
-
-            <div className="expense-item" key={expense.id}>
-
-              <h3>{expense.title}</h3>
-
-              <p>Category: {expense.category}</p>
-              <p>Date: {expense.date}</p>
-
-              <strong>
-                ₹{Number(expense.amount).toFixed(2)}
-              </strong>
-
-              <br />
-
-              <button
-                type="button"
-                onClick={() => deleteExpense(expense.id)}
-              >
-                Delete
-              </button>
-
-            </div>
-
-          ))
-
-        )}
-
+          <button
+            type="button"
+            onClick={() => deleteExpense(expense.id)}
+          >
+            Delete
+          </button>
+        </div>
+      ))
+    )}
+  </>
+)}
       </div>
 
     </div>

@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ExpenseTracker.entity.AppAccount;
 import com.example.ExpenseTracker.service.AuthService;
+import com.example.ExpenseTracker.service.JwtService;
+import com.example.ExpenseTracker.service.UserSessionService;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = {
     "http://localhost:5173",
+    "http://localhost:5174",
     "http://localhost:5176",
     "http://localhost:5177",
     "https://expense-tracker-beige-phi.vercel.app"
@@ -25,9 +28,16 @@ import com.example.ExpenseTracker.service.AuthService;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtService jwtService;
+    private final UserSessionService sessionService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(
+            AuthService authService,
+            JwtService jwtService,
+            UserSessionService sessionService) {
         this.authService = authService;
+        this.jwtService = jwtService;
+        this.sessionService = sessionService;
     }
 
     @PostMapping("/register")
@@ -49,16 +59,55 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AppAccount account) {
         try {
-            String token = authService.login(
+            AppAccount loggedInAccount = authService.login(
                 account.getUsername(),
                 account.getPassword()
             );
 
-            return ResponseEntity.ok(Map.of("token", token));
+            String accessToken =
+                jwtService.generateToken(loggedInAccount.getUsername());
+
+            String refreshToken =
+                sessionService.createSession(loggedInAccount);
+
+            return ResponseEntity.ok(Map.of(
+                "token", accessToken,
+                "refreshToken", refreshToken
+            ));
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(e.getMessage());
         }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody Map<String, String> body) {
+
+        String refreshToken = body.get("refreshToken");
+
+        if (refreshToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return sessionService.getAccount(refreshToken)
+            .map(account -> ResponseEntity.ok(Map.of(
+                "token", jwtService.generateToken(account.getUsername())
+            )))
+            .orElseGet(() ->
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+            );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody Map<String, String> body) {
+
+        String refreshToken = body.get("refreshToken");
+
+        if (refreshToken != null) {
+            sessionService.revokeSession(refreshToken);
+        }
+
+        return ResponseEntity.ok("Logged out successfully");
     }
 }

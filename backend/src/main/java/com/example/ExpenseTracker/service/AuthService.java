@@ -37,7 +37,7 @@ public class AuthService {
         return accountRepository.save(account);
     }
 
-    public String login(String username, String password) {
+    public AppAccount login(String username, String password) {
 
         AppAccount account = accountRepository.findByUsername(username)
             .orElseThrow(() -> new RuntimeException("Invalid username or password"));
@@ -46,6 +46,6 @@ public class AuthService {
             throw new RuntimeException("Invalid username or password");
         }
 
-        return jwtService.generateToken(username);
+       return account;
     }
 }

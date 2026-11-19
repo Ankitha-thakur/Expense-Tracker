@@ -18,6 +18,7 @@ function Login({ onLogin, onShowRegister }) {
       });
 
       localStorage.setItem('token', response.data.token);
+localStorage.setItem('refreshToken', response.data.refreshToken);
       onLogin();
     } catch (error) {
       console.error('Login error:', error);
