@@ -17,9 +17,10 @@ public class CorsConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList(
+      configuration.setAllowedOrigins(Arrays.asList(
     "https://expense-tracker-beige-phi.vercel.app",
     "https://expense-tracker-cc3omit7i-ankitha-thakur.vercel.app",
+    "https://expense-tracker-1fr96d9vn-ankitha-thakur.vercel.app",
     "http://localhost:5174"
 ));
 
